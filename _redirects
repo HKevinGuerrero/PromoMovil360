@@ -1,4 +1,5 @@
-/estanco-el20   /estanco-el20.html   200
-/lacurva        /lacurva.html        200
-/*              /index.html          200
-/.netlify/functions/*   /.netlify/functions/:splat   200
+/.netlify/functions/*   /.netlify/functions/:splat                 200
+/estanco-el20           /.netlify/functions/track?slug=ESTANCO-10  200
+/estanco-el20/*         /.netlify/functions/track?slug=ESTANCO-10  200
+/lacurva                /.netlify/functions/track?slug=LACURVA-15  200
+/lacurva/*              /.netlify/functions/track?slug=LACURVA-15  200
