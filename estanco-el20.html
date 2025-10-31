@@ -154,5 +154,23 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
     <script src="script.js"></script>
+
+    <!-- MODAL RECOMPENSA -->
+<div id="reward-modal" class="reward-modal" aria-hidden="true">
+  <div class="reward-dialog" role="dialog" aria-modal="true">
+    <button class="reward-close" aria-label="Cerrar">&times;</button>
+    <div class="confetti-layer" aria-hidden="true"></div>
+    <h2 class="reward-title">🎉 ¡Premio desbloqueado!</h2>
+    <p class="reward-sub">Cupón aplicado: <strong id="reward-code">PROMO-10</strong></p>
+
+    <div class="progress-wrap">
+      <div class="progress-bar"><span class="progress-fill" style="width:0%"></span></div>
+      <p class="progress-tip">Completando… <strong>99%</strong></p>
+    </div>
+
+    <a class="btn btn-glow" id="reward-cta" href="#" rel="noopener">Canjear ahora</a>
+  </div>
+</div>
+
 </body>
 </html>

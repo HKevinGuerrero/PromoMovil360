@@ -9,7 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="styles.css">
@@ -39,7 +39,7 @@
                 </ul>
 
                 <div class="nav-actions">
-                    <a href="#" class="action-link">Iniciar Sesión</a>
+                    <a href="login.html" class="action-link">Iniciar Sesión</a>
                     <a href="#" class="action-btn">Crea tu Promo &amp; Afiche</a>
                 </div>
             </div>
@@ -74,43 +74,7 @@
                     <a href="estanco-el20.html" class="promo-link">Ver más detalles</a>
                 </div>
             </div>
-<!--
-            <div class="promo-card" data-category="cafe">
-                <div class="promo-image-wrapper">
-                    <img src="imagenes/cafe.png" alt="Promo de Café">
-                </div>
-                <div class="promo-content">
-                    <h3>☕ 2x1 en Cafés Fríos</h3>
-                    <p class="promo-brand">en <strong>Café Segovia</strong></p>
-                    <p class="promo-description">Disfruta esta promoción en cualquiera de nuestras sedes. Perfecto para refrescar tu tarde.</p>
-                    <a href="#" class="promo-link">Ver más detalles</a>
-                </div>
-            </div>
 
-            <div class="promo-card" data-category="calzado">
-                <div class="promo-image-wrapper">
-                    <img src="imagenes/calzado.png" alt="Promo de Calzado">
-                </div>
-                <div class="promo-content">
-                    <h3>👟 30% en calzado deportivo</h3>
-                    <p class="promo-brand">en <strong>Calzado Bucaramanga</strong></p>
-                    <p class="promo-description">Equípate con lo mejor. Válido en referencias seleccionadas hasta agotar existencias.</p>
-                    <a href="#" class="promo-link">Ver más detalles</a>
-                </div>
-            </div>
-
-            <div class="promo-card" data-category="tecnologia">
-                <div class="promo-image-wrapper">
-                    <img src="imagenes/tecnologia.png" alt="Promo de Tecnología">
-                </div>
-                <div class="promo-content">
-                  <h3>🎧 15% en Accesorios Tech</h3>
-                  <p class="promo-brand">en <strong>Gadget World</strong></p>
-                  <p class="promo-description">Audífonos, cargadores y más. Renueva tus accesorios con este descuento especial.</p>
-                  <a href="#" class="promo-link">Ver más detalles</a>
-              </div>
-          </div>
-    -->
           <div class="promo-card" data-category="tecnologia">
                 <div class="promo-image-wrapper">
                     <img src="imagenes/tecno/lacurva.png" alt="Promo de Tecnología">
@@ -144,6 +108,39 @@
     </a>
     
     <script src="script.js"></script>
+
+    <!-- MODAL RECOMPENSA MEJORADO -->
+<div id="reward-modal" class="reward-modal" aria-hidden="true">
+  <div class="reward-backdrop"></div>
+  <div class="reward-dialog" role="dialog" aria-modal="true">
+    <button class="reward-close" aria-label="Cerrar">&times;</button>
+    
+    <div class="confetti-layer" aria-hidden="true"></div>
+    <div class="sparkles-layer" aria-hidden="true"></div>
+    
+    <div class="reward-icon-wrapper">
+      <div class="reward-icon">🎁</div>
+    </div>
+    
+    <h2 class="reward-title">🎉 ¡Premio desbloqueado!</h2>
+    <p class="reward-sub">Cupón aplicado: <strong id="reward-code">CANJEA PROMOCIONES!!</strong></p>
+
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <span class="progress-fill" style="width:0%"></span>
+        <span class="progress-shine"></span>
+      </div>
+      <p class="progress-tip">Completando… <strong class="progress-percent">0%</strong></p>
+    </div>
+
+    <a class="btn btn-glow" id="reward-cta" href="#" rel="noopener">
+      <span class="btn-text">Canjear ahora</span>
+      <span class="btn-shine"></span>
+    </a>
+    
+    <div class="celebration-rays"></div>
+  </div>
+</div>
 
 </body>
 </html>

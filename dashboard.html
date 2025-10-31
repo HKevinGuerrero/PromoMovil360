@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Panel del Cliente | Promo Móvil 360</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* ===== Base / Header / KPIs ===== */
+    body{ margin:0; background: var(--color-fondo); color: var(--color-texto-secundario); font-family:'Poppins',sans-serif; }
+    header{
+      background: linear-gradient(135deg, rgba(200,167,80,1), rgba(175,141,54,1));
+      color: var(--color-blanco);
+      padding: 1rem 2rem;
+      display:flex; justify-content:space-between; align-items:center;
+      box-shadow: var(--sombra-intensa);
+    }
+    header h2{ margin:0; font-weight:700; }
+    header .actions{ display:flex; gap:.5rem; align-items:center; }
+    header .actions a, header .actions button{
+      border-radius: 999px; border:2px solid rgba(255,255,255,.6);
+      background: transparent; color: var(--color-blanco);
+      padding:.5rem 1rem; font-weight:700; cursor:pointer;
+    }
+    header .actions a:hover, header .actions button:hover{ background: rgba(255,255,255,.15); }
+
+    main{ max-width:1200px; margin: 1.5rem auto; padding: 0 1rem; }
+    .kpis{ display:flex; flex-wrap:wrap; gap:1rem; margin: 1rem 0 2rem; }
+    .kpi{
+      flex:1; min-width:220px; background: var(--color-blanco);
+      border:1px solid var(--color-borde); border-radius: var(--radio-borde);
+      box-shadow: var(--sombra-suave); padding: 1.25rem 1.5rem; text-align:center; position:relative; overflow:hidden;
+    }
+    .kpi::after{
+      content:""; position:absolute; inset:0;
+      background: radial-gradient(800px 120px at -10% -10%, rgba(200,167,80,.12), transparent 35%);
+      pointer-events:none;
+    }
+    .kpi h3{ margin:.25rem 0; color: var(--color-texto-principal); }
+    .kpi p{ margin:0; font-size:1.6rem; font-weight:800; color: var(--color-primario); }
+    .empty{
+      text-align:center; padding:2rem; border:1px dashed var(--color-borde);
+      border-radius: var(--radio-borde); background: var(--color-blanco);
+    }
+
+    /* ===== Promo Cards v2 / Grid ===== */
+    .promo-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:1.25rem; }
+    .card-v2{
+      position:relative; overflow:hidden;
+      background:rgba(255,255,255,0.9);
+      backdrop-filter:saturate(140%) blur(6px);
+      border:1px solid var(--color-borde);
+      border-radius: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.08);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .card-v2::after{
+      content:""; position:absolute; inset:0;
+      background: radial-gradient(1200px 200px at -20% -20%, rgba(200,167,80,.12), transparent 40%);
+      pointer-events:none;
+    }
+    .card-v2:hover{ transform: translateY(-2px); box-shadow: 0 16px 40px rgba(0,0,0,.10); }
+
+    .card-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; padding:1rem 1rem .25rem 1rem; }
+    .card-title{ margin:0; color:var(--color-texto-principal); font-weight:800; line-height:1.15; }
+    .slug-badge{
+      align-self:flex-start; font-size:.75rem; letter-spacing:.4px;
+      color:#85631a; background:rgba(200,167,80,.16); border:1px solid rgba(200,167,80,.35);
+      border-radius:999px; padding:.28rem .6rem; font-weight:700;
+    }
+    .card-body{ padding:.25rem 1rem 1rem 1rem; }
+
+    .metrics{ display:flex; flex-wrap:wrap; gap:.5rem .75rem; margin:.5rem 0 .85rem 0; }
+    .chip{
+      display:inline-flex; align-items:center; gap:.4rem;
+      font-weight:700; font-size:.92rem;
+      color:var(--color-texto-principal);
+      background:#fff; border:1px solid var(--color-borde);
+      border-radius:12px; padding:.45rem .65rem;
+    }
+    .chip b{ color:var(--color-primario); font-size:1.05rem; }
+
+    .card-actions{ display:flex; gap:.6rem; flex-wrap:wrap; }
+    .btn-ghost, .btn-primary{
+      border-radius:12px; padding:.55rem .9rem; font-weight:700; cursor:pointer; text-decoration:none;
+    }
+    .btn-primary{
+      background: linear-gradient(135deg, #bf9b44, #a78533);
+      color:#fff; border:1px solid #a7832e; box-shadow: 0 6px 18px rgba(175,141,54,.25);
+    }
+    .btn-primary:hover{ filter:saturate(1.05) brightness(1.03); }
+    .btn-ghost{
+      background:#fff; color:#84661e; border:1px solid rgba(200,167,80,.45);
+    }
+    .btn-ghost:hover{ background:rgba(200,167,80,.10); }
+
+    /* ===== Preview plegable dentro de la card ===== */
+    .card-v2 .preview-wrap{
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .28s ease, opacity .28s ease;
+      opacity: 0;
+      border-top: 1px solid var(--color-borde);
+      margin-top: .75rem;
+    }
+    .card-v2.open .preview-wrap{ opacity: 1; max-height: 520px; }
+    .preview-inner{ padding: .9rem .9rem 1rem; }
+    .preview-img{
+      width: 100%; border-radius: 14px; border: 1px solid var(--color-borde);
+      box-shadow: var(--sombra-suave); display: block;
+    }
+    .preview-actions{ display: flex; gap: .6rem; margin-top: .75rem; flex-wrap: wrap; }
+
+    /* ===== Mini sparkline ===== */
+    .sparkline{ width:100%; height:72px; }
+    .sparkline svg{ width:100%; height:100%; display:block; }
+    .sparkline .line{ fill:none; stroke: #b0892c; stroke-width:2; }
+    .sparkline .area{ fill: rgba(200,167,80,.18); }
+    .sparkline .axis{ stroke:#ddd; stroke-width:1; }
+    .sparkline .dot{ fill:#b0892c; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>Panel del Cliente</h2>
+    <div class="actions">
+      <span id="user-label" style="opacity:.95;"></span>
+      <a href="index.html">Inicio</a>
+      <button id="logout">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="kpis">
+      <div class="kpi"><h3>Esta semana</h3><p id="sum7">—</p></div>
+      <div class="kpi"><h3>Últimos 30 días</h3><p id="sum30">—</p></div>
+      <div class="kpi"><h3>Total global</h3><p id="sumAll">—</p></div>
+    </section>
+
+    <section id="promos" class="promo-grid"></section>
+    <div id="empty" class="empty" style="display:none;">Aún no hay promociones asignadas a tu cuenta.</div>
+  </main>
+
+  <script type="module">
+    import { supabase, requireAuth, currentUser, signOut } from "./auth.js";
+
+    /* ===== Helpers UI: sparkline + preview ===== */
+    function renderSparkline(elId, values){
+      const el = document.getElementById(elId);
+      if (!el) return;
+      const w = el.clientWidth || 280, h = el.clientHeight || 72, pad = 6;
+      const max = Math.max(1, ...values), min = 0;
+      const stepX = (w - pad*2) / Math.max(1, (values.length - 1));
+      const scaleY = v => {
+        const t = (v - min) / (max - min || 1);
+        return h - pad - t*(h - pad*2);
+      };
+      const pts = values.map((v,i)=>[pad + i*stepX, scaleY(v)]);
+      const path = pts.map((p,i)=> (i===0?`M ${p[0]},${p[1]}`:`L ${p[0]},${p[1]}`)).join(' ');
+      const area = `${path} L ${pad + (values.length-1)*stepX},${h-pad} L ${pad},${h-pad} Z`;
+      el.innerHTML = `
+        <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+          <line class="axis" x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}"></line>
+          <path class="area" d="${area}"></path>
+          <path class="line" d="${path}"></path>
+          ${pts.map(p=>`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="2"></circle>`).join('')}
+        </svg>
+      `;
+    }
+    const guessPreview = (slug) => `/imagenes/${slug}.jpg`;
+
+    /* ===== Auth + carga de datos ===== */
+    await requireAuth('login.html');
+    const user = await currentUser();
+    document.getElementById('user-label').textContent =
+      (user?.user_metadata?.business_name || user?.email || 'Usuario');
+
+    const { data: promos } = await supabase
+      .from('promos')
+      .select('slug, target_url, cliente_name, owner_email')
+      .eq('owner_email', user.email);
+
+    const grid = document.getElementById('promos');
+    const empty = document.getElementById('empty');
+    let agg7=0, agg30=0, aggAll=0;
+
+    async function stats(slug){
+      const r = await fetch(`/.netlify/functions/stats?slug=${encodeURIComponent(slug)}`);
+      return r.ok ? r.json() : { last7d:0, last30d:0, total:0, series7:{data:[]}, series30:{data:[]} };
+    }
+
+    if (!promos?.length){
+      empty.style.display = 'block';
+    } else {
+      for (const p of promos){
+        const s = await stats(p.slug);
+        agg7  += s.last7d;
+        agg30 += s.last30d;
+        aggAll += s.total;
+
+        grid.insertAdjacentHTML('beforeend', `
+          <article class="card-v2" data-slug="${p.slug}">
+            <div class="card-head">
+              <h3 class="card-title">${p.cliente_name}</h3>
+              <span class="slug-badge">${p.slug}</span>
+            </div>
+
+            <div class="card-body">
+              <div class="metrics">
+                <span class="chip">7 días: <b>${s.last7d}</b></span>
+                <span class="chip">30 días: <b>${s.last30d}</b></span>
+                <span class="chip">Total: <b>${s.total}</b></span>
+              </div>
+
+              <!-- sparkline -->
+              <div class="sparkline" id="spark-${p.slug}"></div>
+
+              <div class="card-actions" style="margin-top:.75rem;">
+                <button class="btn-primary" 
+                        data-action="toggle-preview" 
+                        data-target-url="${p.target_url}"
+                        data-preview-url="${guessPreview(p.slug)}">
+                  Ver afiche
+                </button>
+                <a class="btn-ghost" href="${p.target_url}" target="_blank">Abrir en página</a>
+                <a class="btn-ghost" href="/estanco-el20" style="display:${p.slug==='ESTANCO-10'?'inline-flex':'none'}">Link impreso</a>
+                <a class="btn-ghost" href="/lacurva" style="display:${p.slug==='LACURVA-15'?'inline-flex':'none'}">Link impreso</a>
+              </div>
+
+              <!-- preview plegable -->
+              <div class="preview-wrap">
+                <div class="preview-inner">
+                  <img class="preview-img" alt="Afiche de ${p.cliente_name}" loading="lazy">
+                  <div class="preview-actions">
+                    <a class="btn-primary" href="${p.target_url}" target="_blank">Abrir afiche completo</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        `);
+
+        renderSparkline(`spark-${p.slug}`, s.series7?.data || []);
+      }
+    }
+
+    // Toggle preview con lazy-load
+    grid.addEventListener('click', async (e)=>{
+      const btn = e.target.closest('[data-action="toggle-preview"]');
+      if (!btn) return;
+      const card = btn.closest('.card-v2');
+      const img  = card.querySelector('.preview-img');
+
+      if (!img.dataset.loaded) {
+        const src = btn.dataset.previewUrl;
+        try {
+          const head = await fetch(src, { method: 'HEAD' });
+          if (!head.ok) throw new Error('No existe preview');
+          img.src = src;
+          img.dataset.loaded = '1';
+        } catch {
+          const target = btn.dataset.targetUrl;
+          const iframe = document.createElement('iframe');
+          iframe.src = target;
+          iframe.style.width = '100%';
+          iframe.style.height = '480px';
+          iframe.style.border = '1px solid var(--color-borde)';
+          iframe.style.borderRadius = '14px';
+          img.replaceWith(iframe);
+          iframe.dataset.loaded = '1';
+        }
+      }
+      card.classList.toggle('open');
+      btn.textContent = card.classList.contains('open') ? 'Ocultar afiche' : 'Ver afiche';
+    });
+
+    document.getElementById('sum7').textContent   = agg7;
+    document.getElementById('sum30').textContent  = agg30;
+    document.getElementById('sumAll').textContent = aggAll;
+
+    document.getElementById('logout').onclick = signOut;
+  </script>
+</body>
+</html>

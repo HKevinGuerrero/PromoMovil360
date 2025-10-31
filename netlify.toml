@@ -1,0 +1,16 @@
+[build]
+  publish = "/"
+  functions = "netlify/functions"
+
+# Redirección invisible para trackeo
+[[redirects]]
+  from = "/estanco-el20"
+  to = "/.netlify/functions/track?slug=ESTANCO-10"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/lacurva"
+  to = "/.netlify/functions/track?slug=LACURVA-15"
+  status = 200
+  force = true

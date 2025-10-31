@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Iniciar sesión | Promo Móvil 360</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    /* Usa variables de tu theme */
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, rgba(200,167,80,.12), rgba(200,167,80,.05));
+      display: grid;
+      place-items: center;
+      color: var(--color-texto-secundario);
+    }
+    .auth-wrap{
+      width: min(420px, 92vw);
+      background: var(--color-blanco);
+      border: 1px solid var(--color-borde);
+      border-radius: var(--radio-borde);
+      box-shadow: var(--sombra-intensa);
+      padding: 2rem;
+    }
+    .auth-title{
+      margin: 0 0 .25rem 0;
+      text-align: center;
+      color: var(--color-texto-principal);
+      font-weight: 700;
+    }
+    .auth-sub{ text-align:center; margin:0 0 1.25rem 0; }
+    .row{ display:flex; flex-direction:column; gap:.35rem; margin:.5rem 0; }
+    .row input{
+      padding: .85rem 1rem;
+      border: 1px solid var(--color-borde);
+      border-radius: 12px;
+      outline: none;
+    }
+    .row input:focus{
+      border-color: var(--color-primario);
+      box-shadow: 0 0 0 3px rgba(200,167,80,.25);
+    }
+    .tabs{ display:flex; gap:.5rem; margin-bottom:.75rem; }
+    .tab{
+      flex:1;
+      border-radius: 999px;
+      padding:.6rem 1rem;
+      border:2px solid var(--color-primario);
+      background: transparent;
+      color: var(--color-primario);
+      font-weight:700;
+      cursor:pointer;
+    }
+    .tab.active{
+      background: var(--color-primario);
+      color: var(--color-blanco);
+      box-shadow: var(--sombra-suave);
+    }
+    .muted{ color: var(--color-texto-secundario); font-size:.9rem; text-align:center; }
+    .msg{ min-height:1.2rem; text-align:center; color: var(--color-primario); margin-top:.25rem; }
+    .spacer{ height:.25rem; }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <h1 class="auth-title">Accede a tu panel</h1>
+    <p class="auth-sub">Gestiona tus promociones y mira tus métricas</p>
+
+    <div class="tabs">
+      <button id="tab-login"  class="tab active">Iniciar sesión</button>
+      <button id="tab-signup" class="tab">Crear cuenta</button>
+    </div>
+
+    <!-- Login -->
+    <form id="form-login" class="info-card" style="margin:0;">
+      <div class="row">
+        <label>Correo electrónico</label>
+        <input id="login-email" type="email" required>
+      </div>
+      <div class="row">
+        <label>Contraseña</label>
+        <input id="login-pass" type="password" required minlength="6">
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" type="submit" style="width:100%;">Entrar</button>
+      <p class="msg" id="login-msg"></p>
+      <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
+    </form>
+
+    <!-- Signup -->
+    <form id="form-signup" class="info-card" style="display:none; margin:1rem 0 0 0;">
+      <div class="row">
+        <label>Nombre del comercio</label>
+        <input id="signup-name" type="text" required>
+      </div>
+      <div class="row">
+        <label>Correo electrónico</label>
+        <input id="signup-email" type="email" required>
+      </div>
+      <div class="row">
+        <label>Contraseña (mínimo 6)</label>
+        <input id="signup-pass" type="password" required minlength="6">
+      </div>
+      <div class="spacer"></div>
+      <button class="btn" type="submit" style="width:100%;">Crear cuenta</button>
+      <p class="msg" id="signup-msg"></p>
+      <p class="muted">Recibirás un correo para confirmar tu cuenta.</p>
+      <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
+    </form>
+  </div>
+
+  <script type="module">
+    import { supabase } from "./auth.js";
+
+    const tabLogin  = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const formLogin = document.getElementById('form-login');
+    const formSignup= document.getElementById('form-signup');
+
+    function setTab(isLogin){
+      tabLogin.classList.toggle('active', isLogin);
+      tabSignup.classList.toggle('active', !isLogin);
+      formLogin.style.display = isLogin ? 'block' : 'none';
+      formSignup.style.display= isLogin ? 'none'  : 'block';
+      document.getElementById(isLogin?'login-email':'signup-name')?.focus();
+    }
+    tabLogin.onclick  = ()=> setTab(true);
+    tabSignup.onclick = ()=> setTab(false);
+
+    formLogin.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const pass  = document.getElementById('login-pass').value.trim();
+      const msg   = document.getElementById('login-msg');
+      msg.textContent = 'Verificando...';
+      const { error } = await supabase.auth.signInWithPassword({ email, password: pass });
+      msg.textContent = error ? error.message : '✅ Iniciando...';
+      if (!error) location.href = 'dashboard.html';
+    });
+
+    formSignup.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value.trim();
+      const email= document.getElementById('signup-email').value.trim();
+      const pass = document.getElementById('signup-pass').value.trim();
+      const msg  = document.getElementById('signup-msg');
+      msg.textContent = 'Creando cuenta...';
+      const { error } = await supabase.auth.signUp({
+        email, password: pass, options: { data: { business_name: name } }
+      });
+      msg.textContent = error ? error.message : '✅ Revisa tu correo para confirmar.';
+      if (!error) setTab(true);
+    });
+  </script>
+</body>
+</html>
