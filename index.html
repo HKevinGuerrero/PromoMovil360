@@ -63,30 +63,106 @@
 
         <div class="promo-grid">
 
-            <div class="promo-card" data-category="bar">
-                <div class="promo-image-wrapper">
-                    <img src="imagenes/estanco/estanco bar.png" alt="Promo de bar">
-                </div>
-                <div class="promo-content">
-                    <h3>🥂 10% de Descuento en Panchita</h3>
-                    <p class="promo-brand">en <strong>Estanco Bar El 20</strong></p>
-                    <p class="promo-description">Escanea el código QR y disfruta tu <strong>Aguardiente Antioqueño</strong> con descuento.</p>
-                    <a href="estanco-el20.html" class="promo-link">Ver más detalles</a>
-                </div>
-            </div>
+      <!-- CARD 1: ESTANCO BAR -->
+      <div class="promo-card" data-category="bar" style="display: flex;">
+        <div class="promo-image-wrapper">
+          <div class="badge-container">
+            <span class="badge badge-hot">
+              <i class="fas fa-fire"></i>
+              Más Visto
+            </span>
+            <span class="badge badge-popular">
+              <i class="fas fa-star"></i>
+              Popular
+            </span>
+          </div>
+          <img src="imagenes/estanco/estanco bar.png" alt="Estanco Bar El 20">
+        </div>
 
-          <div class="promo-card" data-category="tecnologia">
-                <div class="promo-image-wrapper">
-                    <img src="imagenes/tecno/lacurva.png" alt="Promo de Tecnología">
-                </div>
-                <div class="promo-content">
-                  <h3>🎧 15% en Accesorios</h3>
-                  <p class="promo-brand">en <strong>Internet la Curva</strong></p>
-                  <p class="promo-description">Escanea el <strong>código QR</strong> y obtén un <strong>15% de descuento</strong> en <em>referencias seleccionadas</em>. Accesorios como audífonos, cables, cargadores y más.</p>
-                  <a href="lacurva.html" class="promo-link">Ver más detalles</a>
-              </div>
+        <div class="promo-content">
+          <h3>🥂 10% de Descuento en Panchita</h3>
+          <p class="promo-brand">en <strong>Estanco Bar El 20</strong></p>
+          <p class="promo-description">
+            Escanea el código QR y disfruta tu <strong>Aguardiente Antioqueño</strong> con descuento.
+          </p>
+        </div>
+
+        <div class="promo-footer">
+          <div class="info-bar">
+            <div class="info-item watching tooltip" data-tooltip="Personas viendo ahora">
+              <span class="live-indicator"></span>
+              <i class="fas fa-eye"></i>
+              <span id="viewers-1">24</span> viendo
+            </div>
+            <div class="info-item expires tooltip" data-tooltip="Fecha de vencimiento">
+              <i class="fas fa-clock"></i>
+              Vence en <span id="countdown-1" data-expiry="2025-12-31">--</span>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <a href="estanco-el20.html" class="promo-link">
+              Ver más detalles
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <button class="share-btn tooltip" data-tooltip="Compartir" onclick="sharePromo('Estanco Bar El 20')">
+              <i class="fas fa-share-alt"></i>
+            </button>
           </div>
         </div>
+      </div>
+
+      <!-- CARD 2: INTERNET LA CURVA -->
+      <div class="promo-card" data-category="tecnologia" style="display: flex;">
+        <div class="promo-image-wrapper">
+          <div class="badge-container">
+            <span class="badge badge-nuevo">
+              <i class="fas fa-wand-magic-sparkles"></i>
+              Nuevo
+            </span>
+            <span class="badge badge-trending">
+              <i class="fas fa-chart-line"></i>
+              Trending
+            </span>
+          </div>
+          <img src="imagenes/tecno/lacurva.png" alt="Internet La Curva">
+        </div>
+
+        <div class="promo-content">
+          <h3>🎧 15% en Accesorios</h3>
+          <p class="promo-brand">en <strong>Internet la Curva</strong></p>
+          <p class="promo-description">
+            Escanea el <strong>código QR</strong> y obtén un <strong>15% de descuento</strong> en <em>referencias seleccionadas</em>. Accesorios como audífonos, cables, cargadores y más.
+          </p>
+        </div>
+
+        <div class="promo-footer">
+          <div class="info-bar">
+            <div class="info-item watching tooltip" data-tooltip="Personas viendo ahora">
+              <span class="live-indicator"></span>
+              <i class="fas fa-eye"></i>
+              <span id="viewers-2">17</span> viendo
+            </div>
+            <div class="info-item expires tooltip" data-tooltip="Fecha de vencimiento">
+              <i class="fas fa-clock"></i>
+              Vence en <span id="countdown-2" data-expiry="2025-11-30">--</span>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <a href="lacurva.html" class="promo-link">
+              Ver más detalles
+              <i class="fas fa-arrow-right"></i>
+            </a>
+            <button class="share-btn tooltip" data-tooltip="Compartir" onclick="sharePromo('Internet La Curva')">
+              <i class="fas fa-share-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
     </main>
     
 
