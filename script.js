@@ -146,9 +146,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function pageCoupon() {
-    if (location.pathname.includes('estanco-el20')) return { code: 'PANCHITA-10', ctaText: 'Usar descuento' };
-    if (location.pathname.includes('lacurva'))      return { code: 'TECNO-15',    ctaText: 'Usar descuento' };
-    return { code: 'PROMO-10', ctaText: 'Canjear ahora' };
+    if (location.pathname.includes('estanco-el20')) return { code: 'PANCHITA-10',  ctaText: 'Usar descuento' };
+    if (location.pathname.includes('lacurva'))      return { code: 'TECNO-15',     ctaText: 'Usar descuento' };
+    if (location.pathname.includes('adidas'))       return { code: 'PROMO RULETA', ctaText: 'Usar descuento' };
+    return { code: 'PROMO MOVIL 360', ctaText: 'Explorar promos' };
   }
 
   // Modal recompensa mejorado
@@ -260,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const href = link.getAttribute('href') || link.href || '#';
       const isEstanco = href.includes('estanco-el20');
       const isCurva = href.includes('lacurva');
+      const isAdidas = href.includes('adidas');
 
       const cfg = isEstanco ? {
         coupon: 'PANCHITA-10',
@@ -279,6 +281,15 @@ document.addEventListener('DOMContentLoaded', function () {
         icon: '💻',
         confetti: 220,
         sparkles: 35
+      } : isAdidas ? {
+        coupon: 'PROMO RULETA',
+        title: '🎊 ¡Cupón desbloqueado!',
+        sub: 'Descuento <strong>PROMO RULETA</strong> listo para usar.',
+        ctaText: 'Ir a la promo',
+        ctaHref: href + (href.includes('?') ? '&' : '?') + 'src=grid',
+        icon: '🎡',
+        confetti: 230,
+        sparkles: 40
       } : {
         coupon: 'PROMO-10',
         title: '🎊 ¡Cupón desbloqueado!',
@@ -300,7 +311,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const { code, ctaText } = pageCoupon();
     
     const icon = location.pathname.includes('estanco') ? '🥂' : 
-                 location.pathname.includes('lacurva') ? '💻' : '🎁';
+                 location.pathname.includes('lacurva') ? '💻' :
+                 location.pathname.includes('adidas')  ? '🎡' : '🎁';
     
     setTimeout(() => {
       reward.open({
@@ -316,13 +328,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 700);
   }
 
-  // DETALLE: llegada desde la home (src=grid) => confeti + instrucción QR
   const url = new URL(location.href);
+
+  // DETALLE: llegada desde la home (src=grid) => confeti + instrucción QR
   if (url.searchParams.get('src') === 'grid') {
     const { code } = pageCoupon();
     
     const icon = location.pathname.includes('estanco') ? '🥂' : 
-                 location.pathname.includes('lacurva') ? '💻' : '🎁';
+                 location.pathname.includes('lacurva') ? '💻' :
+                 location.pathname.includes('adidas')  ? '🎡' : '🎁';
     
     setTimeout(() => {
       reward.open({
@@ -344,7 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const { code, ctaText } = pageCoupon();
     
     const icon = location.pathname.includes('estanco') ? '🥂' : 
-                 location.pathname.includes('lacurva') ? '💻' : '🎁';
+                 location.pathname.includes('lacurva') ? '💻' :
+                 location.pathname.includes('adidas')  ? '🎡' : '🎁';
     
     setTimeout(() => {
       reward.open({
@@ -361,61 +376,61 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // CONTADOR DE VENCIMIENTO
-function updateCountdowns() {
-  document.querySelectorAll('[id^="countdown-"]').forEach(el => {
-    const expiryDate = new Date(el.dataset.expiry);
-    const now = new Date();
-    const diff = expiryDate - now;
+  function updateCountdowns() {
+    document.querySelectorAll('[id^="countdown-"]').forEach(el => {
+      const expiryDate = new Date(el.dataset.expiry);
+      const now = new Date();
+      const diff = expiryDate - now;
 
-    if (diff <= 0) {
-      el.textContent = 'Expirado';
-      el.parentElement.classList.add('urgent');
-      return;
-    }
+      if (diff <= 0) {
+        el.textContent = 'Expirado';
+        el.parentElement.classList.add('urgent');
+        return;
+      }
 
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 
-    if (days > 30) {
-      const months = Math.floor(days / 30);
-      el.textContent = `${months} ${months === 1 ? 'mes' : 'meses'}`;
-    } else if (days > 0) {
-      el.textContent = `${days} ${days === 1 ? 'día' : 'días'}`;
-      if (days <= 7) el.parentElement.classList.add('urgent');
-    } else {
-      el.textContent = `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
-      el.parentElement.classList.add('urgent');
-    }
-  });
-}
-
-// SIMULACIÓN DE VIEWERS
-function updateViewers() {
-  document.querySelectorAll('[id^="viewers-"]').forEach(el => {
-    const baseCount = parseInt(el.textContent);
-    const variation = Math.floor(Math.random() * 7) - 3; // -3 a +3
-    const newCount = Math.max(1, baseCount + variation);
-    el.textContent = newCount;
-  });
-}
-
-// COMPARTIR
-function sharePromo(promoName) {
-  if (navigator.share) {
-    navigator.share({
-      title: `Promoción: ${promoName}`,
-      text: `¡Mira esta increíble promoción en ${promoName}!`,
-      url: window.location.href
-    }).catch(() => {});
-  } else {
-    alert(`¡Comparte esta promo de ${promoName}!`);
+      if (days > 30) {
+        const months = Math.floor(days / 30);
+        el.textContent = `${months} ${months === 1 ? 'mes' : 'meses'}`;
+      } else if (days > 0) {
+        el.textContent = `${days} ${days === 1 ? 'día' : 'días'}`;
+        if (days <= 7) el.parentElement.classList.add('urgent');
+      } else {
+        el.textContent = `${hours} ${hours === 1 ? 'hora' : 'horas'}`;
+        el.parentElement.classList.add('urgent');
+      }
+    });
   }
-}
 
-// INIT
-updateCountdowns();
-setInterval(updateCountdowns, 60000); // cada minuto
-updateViewers();
-setInterval(updateViewers, 8000); // cada 8 s
+  // SIMULACIÓN DE VIEWERS
+  function updateViewers() {
+    document.querySelectorAll('[id^="viewers-"]').forEach(el => {
+      const baseCount = parseInt(el.textContent);
+      const variation = Math.floor(Math.random() * 7) - 3; // -3 a +3
+      const newCount = Math.max(1, baseCount + variation);
+      el.textContent = newCount;
+    });
+  }
+
+  // COMPARTIR
+  function sharePromo(promoName) {
+    if (navigator.share) {
+      navigator.share({
+        title: `Promoción: ${promoName}`,
+        text: `¡Mira esta increíble promoción en ${promoName}!`,
+        url: window.location.href
+      }).catch(() => {});
+    } else {
+      alert(`¡Comparte esta promo de ${promoName}!`);
+    }
+  }
+
+  // INIT
+  updateCountdowns();
+  setInterval(updateCountdowns, 60000); // cada minuto
+  updateViewers();
+  setInterval(updateViewers, 8000); // cada 8 s
 
 });

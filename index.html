@@ -24,19 +24,20 @@
             </a>
 
             <div class="nav-links-container">
-                <ul class="nav-menu">
-                    <li class="dropdown-container">
-                        <a href="#">Categorías <i class="fa-solid fa-chevron-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#" class="category-filter" data-category="all">Todas</a></li>
-                            <li><a href="#" class="category-filter" data-category="comida">Comida</a></li>
-                            <li><a href="#" class="category-filter" data-category="cafe">Café</a></li>
-                            <li><a href="#" class="category-filter" data-category="calzado">Calzado</a></li>
-                            <li><a href="#" class="category-filter" data-category="tecnologia">Tecnología</a></li>
-                            <li><a href="#" class="category-filter" data-category="bar">Bar</a></li>
-                        </ul>
-                    </li>
-                </ul>
+              <ul class="nav-menu">
+                  <li><a href="nosotros.html">Sobre Nosotros</a></li>
+                  <li class="dropdown-container">
+                      <a href="#">Categorías <i class="fa-solid fa-chevron-down"></i></a>
+                      <ul class="dropdown-menu">
+                          <li><a href="index.html" class="category-filter" data-category="all">Todas</a></li>
+                          <li><a href="index.html" class="category-filter" data-category="comida">Comida</a></li>
+                          <li><a href="index.html" class="category-filter" data-category="cafe">Café</a></li>
+                          <li><a href="index.html" class="category-filter" data-category="calzado">Calzado</a></li>
+                          <li><a href="index.html" class="category-filter" data-category="tecnologia">Tecnología</a></li>
+                          <li><a href="index.html" class="category-filter" data-category="bar">Bar</a></li>
+                      </ul>
+                  </li>
+              </ul>
 
                 <div class="nav-actions">
                     <a href="login.html" class="action-link">Iniciar Sesión</a>
@@ -161,6 +162,57 @@
         </div>
       </div>
 
+              <!-- CARD 3: ADIDAS -->
+        <div class="promo-card" data-category="bar" style="display: flex;">
+          <div class="promo-image-wrapper">
+            <div class="badge-container">
+              <span class="badge badge-nuevo">
+                <i class="fas fa-wand-magic-sparkles"></i>
+                Nuevo
+              </span>
+              <span class="badge badge-popular">
+                <i class="fas fa-star"></i>
+                Popular
+              </span>
+            </div>
+            <img src="imagenes/adidas.png" alt="Adidas">
+          </div>
+
+          <div class="promo-content">
+            <h3>🎁 Gana hasta un 2X1 en Zapatos Adidas</h3>
+            <p class="promo-brand">en <strong>Adidas</strong></p>
+            <p class="promo-description">
+              Esta temporada, equípate con el mejor rendimiento y aprovecha nuestra promo ruleta 
+              exclusivo en zapatillas. ¡Escanea el código, participa y renueva tu look con el doble de energía!.
+            </p>
+          </div>
+
+          <div class="promo-footer">
+            <div class="info-bar">
+              <div class="info-item watching tooltip" data-tooltip="Personas viendo ahora">
+                <span class="live-indicator"></span>
+                <i class="fas fa-eye"></i>
+                <span id="viewers-3">15</span> viendo
+              </div>
+              <div class="info-item expires tooltip" data-tooltip="Fecha de vencimiento">
+                <i class="fas fa-clock"></i>
+                Vence en <span id="countdown-3" data-expiry="2025-12-31">--</span>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <a href="adidas.html" class="promo-link">
+                Ver más detalles
+                <i class="fas fa-arrow-right"></i>
+              </a>
+              <button class="share-btn tooltip" data-tooltip="Compartir" onclick="sharePromo('Nombre del negocio')">
+                <i class="fas fa-share-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+
     </div>
   </div>
     </main>
@@ -199,7 +251,7 @@
     </div>
     
     <h2 class="reward-title">🎉 ¡Premio desbloqueado!</h2>
-    <p class="reward-sub">Cupón aplicado: <strong id="reward-code">CANJEA PROMOCIONES!!</strong></p>
+    <p class="reward-sub">Cupón aplicado: <strong id="reward-code">PROMO MOVÍL 360</strong></p>
 
     <div class="progress-wrap">
       <div class="progress-bar">
