@@ -51,22 +51,21 @@
       align-items: stretch;
     }
 
-    /* --------- PANEL VIDEO --------- */
+/* --------- PANEL VIDEO --------- */
     .video-card{
       position: relative;
-      border:1px solid var(--color-borde);
-      border-radius: var(--radio-borde);
-      box-shadow: var(--sombra-intensa);
-      overflow: clip; /* contención estricta */
-      background:#ffffff;
+      overflow: visible;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .video-card video{
-      position:absolute;
-      inset:0;
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
+      width: 100%;
+      height: auto;
+      display: block;
+      mix-blend-mode: multiply;
+      filter: contrast(1.1);
     }
 
     /* --------- PANEL FORM --------- */
