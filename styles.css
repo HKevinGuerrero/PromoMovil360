@@ -844,8 +844,9 @@ body {
 .cta-row {
     margin-top: 2rem;
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: row;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .btn {
@@ -1447,7 +1448,8 @@ body {
   }
 
   .cta-row .btn {
-    width: 100%;
+    width: auto;
+    flex: 1;
   }
 }
 
@@ -2048,6 +2050,52 @@ a.promo-link:hover{ color:#fff; }
         align-items: stretch;
     }
 }
+
+/* Ajuste fuerte de responsive para la info de cada promo */
+@media (max-width: 768px) {
+
+  /* Detalle de la promo en 1 columna */
+  .promo-detail-container {
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .promo-detail-image-column {
+    position: static;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .promo-detail-content-column {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Tarjeta de información más compacta en móvil */
+  .info-card {
+    margin: 1.5rem 0 1rem;
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Datos en una sola columna (por si acaso) */
+  .info-card .facts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Botones: columna y ancho completo */
+  .info-card .cta-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .info-card .cta-row .btn {
+    justify-content: center;
+  }
+}
+
+
 
 
 
