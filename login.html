@@ -7,110 +7,197 @@
   <link rel="icon" type="image/png" href="imagenes/logo.jpg">
   <link rel="stylesheet" href="styles.css"/>
   <style>
-    /* Usa variables de tu theme */
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(135deg, rgba(200,167,80,.12), rgba(200,167,80,.05));
-      display: grid;
-      place-items: center;
-      color: var(--color-texto-secundario);
+    /* --------- RESETS & FALLBACKS --------- */
+    *, *::before, *::after { box-sizing: border-box; }
+    img, video { max-width: 100%; height: auto; display: block; }
+
+    :root{
+      --space: 2rem;
+      /* Fallbacks por si no existen en styles.css */
+      --color-borde: rgba(0,0,0,.08);
+      --color-primario: #c8a750;
+      --color-blanco: #fff;
+      --color-texto-principal: #111;
+      --color-texto-secundario: #555;
+      --radio-borde: 16px;
+      --sombra-intensa: 0 10px 30px rgba(0,0,0,.08);
+      --sombra-suave: 0 4px 12px rgba(0,0,0,.06);
     }
+
+    html, body{ overflow-x: hidden; }
+
+    body{
+      margin:0;
+      font-family:'Poppins',sans-serif;
+      min-height:100svh; /* más fiable que 100vh en móvil */
+      background: linear-gradient(135deg, rgba(200,167,80,.12), rgba(200,167,80,.05));
+      color: var(--color-texto-secundario);
+      display:block;
+    }
+
+    /* --------- LAYOUT --------- */
+    .shell{
+      /* Contenedor seguro: no se sale con zoom ni con scrollbar */
+      max-width: 1280px;
+      width: 100%;
+      padding-inline: clamp(12px, 2vw, 24px);
+      min-height: 92svh;
+      height: auto;
+      margin: 4vh auto;
+
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: var(--space);
+      align-items: stretch;
+    }
+
+    /* --------- PANEL VIDEO --------- */
+    .video-card{
+      position: relative;
+      border:1px solid var(--color-borde);
+      border-radius: var(--radio-borde);
+      box-shadow: var(--sombra-intensa);
+      overflow: clip; /* contención estricta */
+      background:#ffffff;
+    }
+    .video-card video{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* --------- PANEL FORM --------- */
     .auth-wrap{
-      width: min(420px, 92vw);
+      height:auto;
+      width:100%;
       background: var(--color-blanco);
-      border: 1px solid var(--color-borde);
+      border:1px solid var(--color-borde);
       border-radius: var(--radio-borde);
       box-shadow: var(--sombra-intensa);
       padding: 2rem;
+      overflow: visible;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
     }
     .auth-title{
-      margin: 0 0 .25rem 0;
-      text-align: center;
-      color: var(--color-texto-principal);
-      font-weight: 700;
+      margin:0 0 .25rem 0;
+      text-align:center;
+      color:var(--color-texto-principal);
+      font-weight:700;
     }
     .auth-sub{ text-align:center; margin:0 0 1.25rem 0; }
-    .row{ display:flex; flex-direction:column; gap:.35rem; margin:.5rem 0; }
-    .row input{
-      padding: .85rem 1rem;
-      border: 1px solid var(--color-borde);
-      border-radius: 12px;
-      outline: none;
-    }
-    .row input:focus{
-      border-color: var(--color-primario);
-      box-shadow: 0 0 0 3px rgba(200,167,80,.25);
-    }
+
     .tabs{ display:flex; gap:.5rem; margin-bottom:.75rem; }
     .tab{
-      flex:1;
-      border-radius: 999px;
-      padding:.6rem 1rem;
-      border:2px solid var(--color-primario);
-      background: transparent;
-      color: var(--color-primario);
-      font-weight:700;
-      cursor:pointer;
+      flex:1; border-radius:999px; padding:.6rem 1rem;
+      border:2px solid var(--color-primario); background:transparent;
+      color:var(--color-primario); font-weight:700; cursor:pointer;
     }
-    .tab.active{
-      background: var(--color-primario);
-      color: var(--color-blanco);
+    .tab.active{ background:var(--color-primario); color:var(--color-blanco); box-shadow:var(--sombra-suave); }
+
+    .row{ display:flex; flex-direction:column; gap:.35rem; margin:.5rem 0; }
+    .row input{
+      padding:.85rem 1rem; border:1px solid var(--color-borde);
+      border-radius:12px; outline:none;
+    }
+    .row input:focus{ border-color:var(--color-primario); box-shadow:0 0 0 3px rgba(200,167,80,.25); }
+
+    .btn{
+      border:none; border-radius:12px; padding:.9rem 1rem; font-weight:700;
+      background:var(--color-primario); color:#fff; cursor:pointer;
       box-shadow: var(--sombra-suave);
     }
-    .muted{ color: var(--color-texto-secundario); font-size:.9rem; text-align:center; }
-    .msg{ min-height:1.2rem; text-align:center; color: var(--color-primario); margin-top:.25rem; }
+    .btn:focus{ outline: none; box-shadow:0 0 0 3px rgba(200,167,80,.25); }
+
+    .muted{ color:var(--color-texto-secundario); font-size:.9rem; text-align:center; }
+    .msg{ min-height:1.2rem; text-align:center; color:var(--color-primario); margin-top:.25rem; }
     .spacer{ height:.25rem; }
+    .promo-link{ color:inherit; text-decoration:underline; }
+
+    /* --------- RESPONSIVE --------- */
+    @media (max-width: 980px){
+      .shell{
+        grid-template-columns: 1fr;
+        gap: clamp(12px, 2.5vw, 20px);
+      }
+      .video-card{ aspect-ratio: 16 / 9; } /* bloquea 16:9 al pasar a 1 columna */
+    }
+    @media (max-width: 480px){
+      .auth-wrap{ padding: 1rem; }
+      .tabs{ gap: .4rem; }
+      .row input{ padding: .8rem .9rem; }
+    }
   </style>
 </head>
+
 <body>
-  <div class="auth-wrap">
-    <h1 class="auth-title">Accede a tu panel</h1>
-    <p class="auth-sub">Gestiona tus promociones y mira tus métricas</p>
+  <main class="shell">
+    <!-- IZQUIERDA: VIDEO -->
+    <section class="video-card" aria-label="Video de fondo">
+      <video
+        src="imagenes/animacion_logo.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="media/login-poster.jpg">
+      </video>
+    </section>
 
-    <div class="tabs">
-      <button id="tab-login"  class="tab active">Iniciar sesión</button>
-      <button id="tab-signup" class="tab">Crear cuenta</button>
-    </div>
+    <!-- DERECHA: FORMULARIO -->
+    <section>
+      <div class="auth-wrap">
+        <h1 class="auth-title">Accede a tu panel</h1>
+        <p class="auth-sub">Gestiona tus promociones y mira tus métricas</p>
 
-    <!-- Login -->
-    <form id="form-login" class="info-card" style="margin:0;">
-      <div class="row">
-        <label>Correo electrónico</label>
-        <input id="login-email" type="email" required>
-      </div>
-      <div class="row">
-        <label>Contraseña</label>
-        <input id="login-pass" type="password" required minlength="6">
-      </div>
-      <div class="spacer"></div>
-      <button class="btn" type="submit" style="width:100%;">Entrar</button>
-      <p class="msg" id="login-msg"></p>
-      <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
-    </form>
+        <div class="tabs">
+          <button id="tab-login"  class="tab active" type="button">Iniciar sesión</button>
+          <button id="tab-signup" class="tab" type="button">Crear cuenta</button>
+        </div>
 
-    <!-- Signup -->
-    <form id="form-signup" class="info-card" style="display:none; margin:1rem 0 0 0;">
-      <div class="row">
-        <label>Nombre del comercio</label>
-        <input id="signup-name" type="text" required>
+        <!-- Login -->
+        <form id="form-login" class="info-card" style="margin:0;">
+          <div class="row">
+            <label for="login-email">Correo electrónico</label>
+            <input id="login-email" type="email" required autocomplete="username">
+          </div>
+          <div class="row">
+            <label for="login-pass">Contraseña</label>
+            <input id="login-pass" type="password" required minlength="6" autocomplete="current-password">
+          </div>
+          <div class="spacer"></div>
+          <button class="btn" type="submit" style="width:100%;">Entrar</button>
+          <p class="msg" id="login-msg"></p>
+          <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
+        </form>
+
+        <!-- Signup -->
+        <form id="form-signup" class="info-card" style="display:none; margin:1rem 0 0 0;">
+          <div class="row">
+            <label for="signup-name">Nombre del comercio</label>
+            <input id="signup-name" type="text" required autocomplete="organization">
+          </div>
+          <div class="row">
+            <label for="signup-email">Correo electrónico</label>
+            <input id="signup-email" type="email" required autocomplete="email">
+          </div>
+          <div class="row">
+            <label for="signup-pass">Contraseña (mínimo 6)</label>
+            <input id="signup-pass" type="password" required minlength="6" autocomplete="new-password">
+          </div>
+          <div class="spacer"></div>
+          <button class="btn" type="submit" style="width:100%;">Crear cuenta</button>
+          <p class="msg" id="signup-msg"></p>
+          <p class="muted">Recibirás un correo para confirmar tu cuenta.</p>
+          <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
+        </form>
       </div>
-      <div class="row">
-        <label>Correo electrónico</label>
-        <input id="signup-email" type="email" required>
-      </div>
-      <div class="row">
-        <label>Contraseña (mínimo 6)</label>
-        <input id="signup-pass" type="password" required minlength="6">
-      </div>
-      <div class="spacer"></div>
-      <button class="btn" type="submit" style="width:100%;">Crear cuenta</button>
-      <p class="msg" id="signup-msg"></p>
-      <p class="muted">Recibirás un correo para confirmar tu cuenta.</p>
-      <p class="muted"><a href="index.html" class="promo-link">⬅ Volver a inicio</a></p>
-    </form>
-  </div>
+    </section>
+  </main>
 
   <script type="module">
     import { supabase } from "./auth.js";
@@ -125,7 +212,9 @@
       tabSignup.classList.toggle('active', !isLogin);
       formLogin.style.display = isLogin ? 'block' : 'none';
       formSignup.style.display= isLogin ? 'none'  : 'block';
-      document.getElementById(isLogin?'login-email':'signup-name')?.focus();
+      const focusId = isLogin ? 'login-email' : 'signup-name';
+      const el = document.getElementById(focusId);
+      if (el) el.focus();
     }
     tabLogin.onclick  = ()=> setTab(true);
     tabSignup.onclick = ()=> setTab(false);
