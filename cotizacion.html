@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cotiza tu Afiche - Promo Móvil 360</title>
+  <link rel="icon" type="image/png" href="imagenes/logo.jpg">
+
+  <!-- Tailwind (ok en dev; en prod usa CLI/PostCSS) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- intl-tel-input 25.12.4 (rutas correctas) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/css/intlTelInput.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/intlTelInput.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.12.4/build/js/utils.js"></script>
+
+  <style>
+    .animate-spin-slow { animation: spin 1s linear infinite; }
+    .animate-fade-in { animation: fade 0.3s ease-in; }
+    @keyframes fade { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .iti{ width:100%; }
+    .iti__country-list{ z-index:9999; }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-8 px-4">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="text-left">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Cotiza tu Afiche Publicitario</h1>
+        <p class="text-gray-600">Responde y obtén tu precio al instante</p>
+      </div>
+      <a id="btnHome" href="./index.html"
+         class="mt-2 inline-flex items-center gap-2 px-4 py-2 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Ir al inicio
+      </a>
+    </div>
+
+    <!-- Progreso -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center mb-2">
+        <span id="progressText" class="text-sm font-semibold text-gray-600">Paso 1</span>
+        <span id="progressPct" class="text-sm font-semibold text-yellow-600">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div id="progressBar" class="bg-gradient-to-r from-yellow-500 to-orange-500 h-3 rounded-full transition-all duration-500" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Contenido -->
+    <div id="card" class="bg-white rounded-2xl shadow-xl p-8 mb-6"></div>
+
+    <!-- Navegación -->
+    <div id="nav" class="flex gap-4">
+      <button id="btnBack" class="hidden items-center gap-2 px-6 py-3 border-2 border-gray-300 rounded-xl font-semibold text-gray-700 hover:bg-gray-50 transition-all">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+        Atrás
+      </button>
+      <button id="btnNext" class="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-yellow-600 hover:bg-yellow-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all shadow-lg">
+        Continuar
+        <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+      </button>
+    </div>
+
+    <!-- Confianza inicial -->
+    <div id="trust" class="mt-8 text-center">
+      <div class="flex justify-center gap-8 text-sm text-gray-600">
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" class="text-green-600"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+          <span>Sin compromiso</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" class="text-green-600"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+          <span>Cotización gratis</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" class="text-green-600"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+          <span>2 minutos</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ----- Datos -----
+    const SERVICIOS = [
+      { id: 1, nombre: "Diseño de código QR personalizado con afiche", precio: 53333 },
+      { id: 2, nombre: "Impresión de afiches publicitarios con QR",      precio: 73149 },
+      { id: 3, nombre: "Servicio completo de campaña QR (diseño + impresión + reparto)", precio: 103031 },
+      { id: 4, nombre: "Actualización o rediseño de QR (página oficial Promo Móvil 360)", precio: 21000 },
+    ];
+    const PRECIOS = { instalacion: 15000 };
+    const MAX_UNITS = 30;
+
+    function descuentoPorCantidad(n){
+      if(n >= 11) return 0.20;
+      if(n >= 7)  return 0.15;
+      if(n >= 4)  return 0.10;
+      return 0;
+    }
+
+    // ----- Estado -----
+    let formData = {
+      servicioId: null,
+      tipoNegocio: '',
+      quePromocionar: '',
+      formatoAfiche: '',
+      cantidadUnitaria: 1,
+      necesitaInstalacion: '',
+      ubicacion: '',
+      nombre: '',
+      email: '',
+      telefono: '',
+      negocio: ''
+    };
+    let cotizacion = { unitario:0, cantidad:1, subtotal:0, descuento:0, instalacion:0, total:0 };
+    let isSubmitting = false;
+
+    // intl-tel-input instance
+    let iti = null;
+
+    // Flujo
+    const BASE_FLOW = ["servicio","tipoNegocio","quePromocionar","formato","cantidad","instalacion","contacto","resumen"];
+    function getFlow(){
+      const s = formData.servicioId;
+      if(!s) return BASE_FLOW;
+      if(s === 4) return ["servicio","contacto","resumen"]; // actualización/rediseño
+      if(s === 1) return ["servicio","tipoNegocio","quePromocionar","formato","contacto","resumen"]; // diseño QR
+      if(s === 3) return ["servicio","tipoNegocio","quePromocionar","formato","cantidad","contacto","resumen"]; // completo
+      return BASE_FLOW; // impresión
+    }
+    let stepIdx = 0;
+
+    // ----- UI -----
+    const $ = (sel) => document.querySelector(sel);
+    const card = $("#card");
+    const btnNext = $("#btnNext");
+    const btnBack = $("#btnBack");
+    const progressText = $("#progressText");
+    const progressPct = $("#progressPct");
+    const progressBar = $("#progressBar");
+    const trust = $("#trust");
+    const nav = $("#nav");
+
+    function currency(n){ return n.toLocaleString('es-CO'); }
+    function inputBase(attrs){ return `<input ${attrs} class="w-full p-3 border-2 rounded-xl focus:border-yellow-600 focus:outline-none border-gray-200"/>`; }
+    function currentStep(){ return getFlow()[stepIdx]; }
+
+    function setProgress(){
+      const flow = getFlow();
+      const step = stepIdx + 1;
+      const total = flow.length;
+      const pct = Math.round((step/total)*100);
+      progressText.textContent = `Paso ${step} de ${total}`;
+      progressPct.textContent = `${pct}%`;
+      progressBar.style.width = `${pct}%`;
+      trust.style.display = (currentStep() === "servicio") ? "block" : "none";
+      nav.style.display = (currentStep() === "resumen") ? "none" : "flex";
+
+      if(stepIdx > 0 && currentStep() !== "resumen"){
+        btnBack.classList.remove("hidden"); btnBack.classList.add("flex");
+      } else {
+        btnBack.classList.add("hidden"); btnBack.classList.remove("flex");
+      }
+
+      btnNext.textContent = (step === total-1) ? "Ver cotización" : "Continuar";
+      if(currentStep() !== "resumen"){
+        btnNext.insertAdjacentHTML("beforeend",
+          `<svg width="20" height="20" viewBox="0 0 24 24" class="inline-block"><path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>`
+        );
+      }
+    }
+
+    function serviceSelected(){ return SERVICIOS.find(s => s.id === formData.servicioId) || null; }
+
+    // Validaciones contacto
+    function isValidEmail(v){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+    }
+    function isValidPhone(v){
+      try{
+        const telEl = document.getElementById("telefono");
+        if(iti && telEl && typeof iti.isValidNumber === "function"){
+          return iti.isValidNumber();
+        }
+      }catch(e){}
+      const digits = (v||'').replace(/\D/g,'');
+      return (digits.length === 10) || (digits.length === 12 && digits.startsWith('57'));
+    }
+
+    function isStepValid(){
+      switch(currentStep()){
+        case "servicio":      return !!formData.servicioId;
+        case "tipoNegocio":   return formData.tipoNegocio !== '';
+        case "quePromocionar":return formData.quePromocionar !== '';
+        case "formato":       return formData.formatoAfiche !== '';
+        case "cantidad":      return Number.isInteger(formData.cantidadUnitaria) && formData.cantidadUnitaria >= 1 && formData.cantidadUnitaria <= MAX_UNITS;
+        case "instalacion":   return formData.necesitaInstalacion !== '';
+        case "contacto": {
+          return !!(formData.nombre && formData.negocio && isValidEmail(formData.email||'') && isValidPhone(formData.telefono||''));
+        }
+        case "resumen":       return true;
+        default:              return true;
+      }
+    }
+
+    function calcularCotizacion(){
+      const srv = serviceSelected();
+      const unit = srv ? srv.precio : 0;
+
+      let n = formData.cantidadUnitaria || 1;
+      if(formData.servicioId === 1 || formData.servicioId === 4) n = 1;
+      n = Math.min(MAX_UNITS, Math.max(1, n));
+
+      const descRate = descuentoPorCantidad(n);
+      const subtotal = unit * n;
+      const descuento = Math.round(subtotal * descRate);
+
+      let inst = 0;
+      if(formData.servicioId === 3){ inst = 0; }
+      else if(formData.servicioId === 1 || formData.servicioId === 4){ inst = 0; }
+      else { inst = (formData.necesitaInstalacion === 'si') ? PRECIOS.instalacion : 0; }
+
+      const total = Math.round(subtotal - descuento + inst);
+      cotizacion = { unitario: unit, cantidad: n, subtotal, descuento, instalacion: inst, total };
+    }
+
+    // ----- Render -----
+    function render(){
+      btnNext.disabled = !isStepValid();
+      setProgress();
+
+      const step = currentStep();
+
+      if(step === "servicio"){
+        const sId = formData.servicioId;
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">Elige el servicio</h2>
+            <p class="text-gray-600">Selecciona uno de los 4 servicios</p>
+            <div class="grid grid-cols-1 gap-4 mt-6">
+              ${SERVICIOS.map(s => `
+                <button data-field="servicioId" data-value="${s.id}"
+                  class="p-5 rounded-xl border-2 transition-all text-left ${sId===s.id?'border-yellow-600 bg-yellow-50':'border-gray-200 hover:border-yellow-400'}">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-bold text-lg text-gray-800">${s.nombre}</h3>
+                      <p class="text-sm text-gray-600">Precio unitario</p>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-xl font-bold text-yellow-600">$${currency(s.precio)}</p>
+                      <p class="text-xs text-gray-500">c/u</p>
+                    </div>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if(step === "tipoNegocio"){
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">¿Qué tipo de negocio tienes?</h2>
+            <p class="text-gray-600">Para personalizar tu afiche</p>
+            <div class="grid grid-cols-2 gap-3 mt-6">
+              ${['Restaurante','Bar/Discoteca','Tienda/Boutique','Salón de Belleza','Gimnasio','Café','Tecnología','Otro'].map(tipo => `
+                <button data-field="tipoNegocio" data-value="${tipo}"
+                  class="p-4 rounded-xl border-2 font-semibold transition-all ${formData.tipoNegocio===tipo?'border-yellow-600 bg-yellow-50 text-yellow-800':'border-gray-200 hover:border-yellow-400 text-gray-700'}">
+                  ${tipo}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if(step === "quePromocionar"){
+        const opciones = [
+          { value: 'Descuento especial', emoji:'💰' },
+          { value: 'Nuevo producto/servicio', emoji:'✨' },
+          { value: 'Evento especial', emoji:'🎉' },
+          { value: 'Menú/Carta', emoji:'📋' },
+          { value: '2x1 u oferta', emoji:'🎁' },
+          { value: 'Redes sociales', emoji:'📱' },
+          { value: 'Otro', emoji:'💡' },
+        ];
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">¿Qué quieres promocionar?</h2>
+            <p class="text-gray-600">Elige el objetivo de tu campaña</p>
+            <div class="grid grid-cols-1 gap-3 mt-6">
+              ${opciones.map(item => `
+                <button data-field="quePromocionar" data-value="${item.value}"
+                  class="p-4 rounded-xl border-2 font-semibold transition-all flex items-center gap-3 ${formData.quePromocionar===item.value?'border-yellow-600 bg-yellow-50 text-yellow-800':'border-gray-200 hover:border-yellow-400 text-gray-700'}">
+                  <span class="text-2xl">${item.emoji}</span> ${item.value}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if(step === "formato"){
+        const items = [
+          { formato:'A4', medida:'21x30cm', desc:'Ideal para mesas y vitrinas' },
+          { formato:'A3', medida:'30x42cm', desc:'Perfecto para paredes' },
+          { formato:'Banner', medida:'60x90cm', desc:'Máximo impacto visual' },
+        ];
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">Elige el formato</h2>
+            <p class="text-gray-600">Todos incluyen QR dinámico y diseño personalizado</p>
+            <div class="grid grid-cols-1 gap-4 mt-6">
+              ${items.map(item => `
+                <button data-field="formatoAfiche" data-value="${item.formato}"
+                  class="p-5 rounded-xl border-2 transition-all text-left ${formData.formatoAfiche===item.formato?'border-yellow-600 bg-yellow-50':'border-gray-200 hover:border-yellow-400'}">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-bold text-lg text-gray-800">${item.formato}</h3>
+                      <p class="text-sm text-gray-600">${item.medida} • ${item.desc}</p>
+                    </div>
+                    <div class="text-right text-xs text-gray-500">Precio según servicio elegido</div>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      if (step === "cantidad") {
+        const n = formData.cantidadUnitaria || 1;
+        const desc = descuentoPorCantidad(n);
+
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">¿Cuántas unidades necesitas?</h2>
+            <p class="text-gray-600">Ingresa la cantidad exacta (aplicamos descuento automático por volumen)</p>
+
+            <div class="flex items-stretch gap-2 mt-2">
+              <button id="qtyMinus" class="px-4 rounded-xl border-2 border-gray-300 hover:bg-gray-50 text-xl font-bold">−</button>
+              <input id="cant" type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="${MAX_UNITS}" step="1" autocomplete="off"
+                     value="${n}" onfocus="this.select()"
+                     class="w-full p-3 border-2 border-gray-200 rounded-xl text-center text-xl font-bold
+                            focus:border-yellow-600 focus:outline-none"
+                     aria-label="Cantidad exacta"/>
+              <button id="qtyPlus" class="px-4 rounded-xl border-2 border-gray-300 hover:bg-gray-50 text-xl font-bold">+</button>
+            </div>
+            <p class="text-xs text-gray-500">Mín. 1 • Máx. ${MAX_UNITS}</p>
+
+            <p class="text-sm text-gray-600">
+              Descuento por cantidad: <span id="qtyDiscount" class="font-semibold">${Math.round(desc*100)}%</span>
+            </p>
+          </div>
+        `;
+
+        const cant = $("#cant");
+        const discountEl = $("#qtyDiscount");
+        const clamp = (x) => Math.min(MAX_UNITS, Math.max(1, Number.isFinite(x) ? x : 1));
+
+        const updateButtonsState = (q)=>{
+          const m = document.getElementById('qtyMinus');
+          const p = document.getElementById('qtyPlus');
+          m.disabled = q <= 1;
+          p.disabled = q >= MAX_UNITS;
+          m.classList.toggle('opacity-50', m.disabled);
+          p.classList.toggle('opacity-50', p.disabled);
+        };
+
+        const setQtySoft = (v) => {
+          const q = clamp(v);
+          formData.cantidadUnitaria = q;
+          discountEl.textContent = `${Math.round(descuentoPorCantidad(q) * 100)}%`;
+          btnNext.disabled = !isStepValid();
+          updateButtonsState(q);
+        };
+
+        const setQtyHard = (v) => {
+          formData.cantidadUnitaria = clamp(v);
+          render();
+        };
+
+        cant.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+        cant.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value, 10);
+          setQtySoft(val);
+        });
+        cant.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') setQtyHard(parseInt(cant.value, 10));
+        });
+        cant.addEventListener('blur', () => setQtyHard(parseInt(cant.value, 10)));
+
+        document.getElementById('qtyMinus').addEventListener('click', () => setQtyHard((formData.cantidadUnitaria || 1) - 1));
+        document.getElementById('qtyPlus').addEventListener('click',  () => setQtyHard((formData.cantidadUnitaria || 1) + 1));
+
+        updateButtonsState(n);
+      }
+
+      if(step === "instalacion"){
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">¿Necesitas instalación?</h2>
+            <p class="text-gray-600">Instalamos en puntos estratégicos (+$${currency(PRECIOS.instalacion)})</p>
+            <div class="grid grid-cols-2 gap-4 mt-6">
+              <button data-field="necesitaInstalacion" data-value="si"
+                class="p-6 rounded-xl border-2 transition-all ${formData.necesitaInstalacion==='si'?'border-yellow-600 bg-yellow-50':'border-gray-200 hover:border-yellow-400'}">
+                <div class="text-center">
+                  <p class="text-3xl mb-2">✅</p>
+                  <p class="font-bold text-gray-800">Sí, instálenlo</p>
+                  <p class="text-sm text-gray-600 mt-1">+$${currency(PRECIOS.instalacion)}</p>
+                </div>
+              </button>
+              <button data-field="necesitaInstalacion" data-value="no"
+                class="p-6 rounded-xl border-2 transition-all ${formData.necesitaInstalacion==='no'?'border-yellow-600 bg-yellow-50':'border-gray-200 hover:border-yellow-400'}">
+                <div class="text-center">
+                  <p class="text-3xl mb-2">📦</p>
+                  <p class="font-bold text-gray-800">No, lo recojo</p>
+                  <p class="text-sm text-gray-600 mt-1">Sin costo adicional</p>
+                </div>
+              </button>
+            </div>
+            ${formData.necesitaInstalacion==='si'?`
+              <div class="mt-6 animate-fade-in">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">¿Dónde quieres que lo instalemos?</label>
+                <input id="ubicacion" type="text" value="${formData.ubicacion||''}" placeholder="Ej: Frente a mi negocio en Getsemaní"
+                  class="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-yellow-600 focus:outline-none"/>
+              </div>`:''}
+          </div>
+        `;
+        const inputUb = $("#ubicacion");
+        if(inputUb){ inputUb.addEventListener('input', (e)=>{ formData.ubicacion = e.target.value; }); }
+      }
+
+      if(step === "contacto"){
+        const help = (id, text) => `<p id="${id}" class="mt-1 text-xs text-red-600 hidden">${text}</p>`;
+        card.innerHTML = `
+          <div class="space-y-4">
+            <h2 class="text-2xl font-bold text-gray-800">Datos de contacto</h2>
+            <p class="text-gray-600">Para enviarte tu cotización personalizada</p>
+            <div class="space-y-4 mt-6">
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Nombre del negocio *</label>
+                ${inputBase(`id="negocio" type="text" placeholder="Ej: Restaurante El Sabor" value="${formData.negocio||''}"`)}
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Tu nombre completo *</label>
+                ${inputBase(`id="nombre" type="text" placeholder="Ej: María García" value="${formData.nombre||''}"`)}
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Correo electrónico *</label>
+                ${inputBase(`id="email" type="email" placeholder="tu@email.com" value="${formData.email||''}"`)}
+                ${help("emailHelp","Ingresa un correo válido (ej. nombre@dominio.com)")}
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Teléfono / WhatsApp *</label>
+                ${inputBase(`id="telefono" type="tel" placeholder="300 123 4567" value="${formData.telefono||''}"`)}
+                ${help("telHelp","Ingresa un número válido (puedes elegir país en la bandera)")}
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Validación visual
+        const addInvalid = (el) => { el.classList.add("border-red-400","focus:border-red-500"); };
+        const removeInvalid = (el) => { el.classList.remove("border-red-400","focus:border-red-500"); };
+
+        const validate = ()=>{
+          const emailEl = document.getElementById("email");
+          const telEl   = document.getElementById("telefono");
+          const emailOk = isValidEmail(emailEl.value||"");
+          const telOk   = isValidPhone(telEl.value||"");
+
+          document.getElementById("emailHelp").classList.toggle("hidden", emailOk);
+          document.getElementById("telHelp").classList.toggle("hidden", telOk);
+
+          emailOk ? removeInvalid(emailEl) : addInvalid(emailEl);
+          telOk   ? removeInvalid(telEl)   : addInvalid(telEl);
+
+          btnNext.disabled = !isStepValid();
+        };
+
+        // Montar intl-tel-input de forma robusta
+        const telInput = document.getElementById("telefono");
+        function mountITI(){
+          if (!window.intlTelInput || !telInput) return false;
+          iti = window.intlTelInput(telInput, {
+            initialCountry: "co",
+            preferredCountries: ["co","mx","us","pe","cl","ar","es"],
+            separateDialCode: true,
+            nationalMode: false,
+            autoPlaceholder: "polite",
+          });
+          telInput.addEventListener("countrychange", ()=>{ formData.telefono = telInput.value; validate(); });
+          telInput.addEventListener("input",        ()=>{ formData.telefono = telInput.value; validate(); });
+          return true;
+        }
+        if (!mountITI()){
+          let tries = 0;
+          const t = setInterval(()=>{ tries++; if (mountITI() || tries > 20) clearInterval(t); }, 100);
+        }
+
+        ["negocio","nombre","email","telefono"].forEach(id=>{
+          const el = document.getElementById(id);
+          el.addEventListener('input', (e)=>{
+            formData[id] = e.target.value;
+            if(id==="email" || id==="telefono") validate();
+            else btnNext.disabled = !isStepValid();
+          });
+          el.addEventListener('blur', ()=>{ if(id==="email" || id==="telefono") validate(); });
+        });
+
+        validate();
+      }
+
+      if(step === "resumen"){
+        calcularCotizacion();
+        const srv = serviceSelected();
+
+        const filas = [];
+        filas.push(["Servicio", srv ? srv.nombre : ""]);
+        if(formData.servicioId !== 4){
+          if(formData.formatoAfiche) filas.push(["Formato", formData.formatoAfiche]);
+          if(formData.tipoNegocio)   filas.push(["Tipo de negocio", formData.tipoNegocio]);
+          if(formData.quePromocionar)filas.push(["Promoción", formData.quePromocionar]);
+          if(formData.servicioId !== 1) filas.push(["Cantidad", `${cotizacion.cantidad} unidades`]);
+          if(formData.servicioId !== 1 && formData.servicioId !== 3){
+            filas.push(["Instalación", formData.necesitaInstalacion==='si'?'Sí':'No']);
+            if(formData.necesitaInstalacion==='si' && formData.ubicacion) filas.push(["Ubicación", formData.ubicacion]);
+          }
+        }
+
+        card.innerHTML = `
+          <div class="space-y-6">
+            <div class="text-center">
+              <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
+                <svg width="40" height="40" viewBox="0 0 24 24" class="text-green-600"><path fill="currentColor" d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg>
+              </div>
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">¡Tu cotización está lista!</h2>
+              <p class="text-gray-600">Revisa y confirma por WhatsApp</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-300 rounded-2xl p-6">
+              <div class="flex items-center justify-between mb-4">
+                <span class="text-sm font-semibold text-gray-600">COTIZACIÓN ESTIMADA</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" class="text-yellow-600"><path fill="currentColor" d="M5 3l2 4 4 2-4 2-2 4-2-4-4-2 4-2 2-4zm14 6l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z"/></svg>
+              </div>
+              <div class="text-5xl font-bold text-gray-800 mb-2">$${currency(cotizacion.total)}</div>
+              <p class="text-sm text-gray-600">COP</p>
+              <div class="mt-4 pt-4 border-t border-yellow-200 text-sm text-gray-700 space-y-1">
+                <div class="flex justify-between"><span>Precio unitario</span><span>$${currency(cotizacion.unitario)}</span></div>
+                ${formData.servicioId!==1?`<div class="flex justify-between"><span>Cantidad</span><span>${cotizacion.cantidad}</span></div>`:''}
+                ${formData.servicioId!==4?`<div class="flex justify-between"><span>Subtotal</span><span>$${currency(cotizacion.subtotal)}</span></div>`:''}
+                ${formData.servicioId!==4?`<div class="flex justify-between"><span>Descuento por cantidad</span><span>-$${currency(cotizacion.descuento)}</span></div>`:''}
+                ${(formData.servicioId!==1 && formData.servicioId!==3 && formData.servicioId!==4)?`<div class="flex justify-between"><span>Instalación</span><span>$${currency(cotizacion.instalacion)}</span></div>`:''}
+              </div>
+            </div>
+
+            <div class="bg-white border-2 border-gray-200 rounded-xl p-5 space-y-3">
+              <h3 class="font-bold text-gray-800 mb-3">📋 Resumen de tu pedido:</h3>
+              <div class="space-y-2 text-sm">
+                ${filas.map(([k,v])=>`
+                  <div class="flex justify-between">
+                    <span class="text-gray-600">${k}:</span>
+                    <span class="font-semibold text-gray-800 text-right">${v}</span>
+                  </div>`).join('')}
+              </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+              <button id="btnEdit" class="w-full sm:w-1/2 border-2 border-gray-300 text-gray-800 font-semibold py-4 px-6 rounded-xl hover:bg-gray-50">
+                Editar respuestas
+              </button>
+              <button id="btnSubmit" class="w-full sm:w-1/2 bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-3 shadow-lg">
+                <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+                Confirmar por WhatsApp
+              </button>
+            </div>
+
+            <p class="text-xs text-center text-gray-500">Al continuar, aceptas que nos contactemos contigo para confirmar detalles</p>
+          </div>
+        `;
+
+        $("#btnEdit").addEventListener('click', ()=>{ stepIdx = 0; render(); });
+
+        const btnSubmit = $("#btnSubmit");
+        btnSubmit.addEventListener('click', async ()=>{
+          if(isSubmitting) return;
+          isSubmitting = true;
+          btnSubmit.disabled = true;
+          btnSubmit.innerHTML = `<span class="animate-spin-slow inline-block w-5 h-5 border-2 border-white border-b-transparent rounded-full"></span> Enviando...`;
+
+          await new Promise(r=>setTimeout(r, 700));
+          const srv = serviceSelected();
+
+          // E.164 si está disponible
+          let phoneIntl = formData.telefono;
+          try{
+            const telEl = document.getElementById("telefono");
+            if(iti && telEl && iti.isValidNumber()){
+              phoneIntl = iti.getNumber();
+            }
+          }catch(e){}
+
+          const lineas = [];
+          lineas.push(`🎯 *NUEVA COTIZACIÓN - Promo Móvil 360*`);
+          lineas.push(``);
+          lineas.push(`📋 *Cliente*`);
+          lineas.push(`• Negocio: ${formData.negocio}`);
+          lineas.push(`• Contacto: ${formData.nombre}`);
+          lineas.push(`• Email: ${formData.email}`);
+          lineas.push(`• Teléfono: ${phoneIntl}`);
+          lineas.push(``);
+          lineas.push(`🧩 *Servicio*`);
+          lineas.push(`• ${srv ? srv.nombre : ""}`);
+          if(formData.servicioId !== 4 && formData.formatoAfiche){
+            lineas.push(`• Formato: ${formData.formatoAfiche}`);
+          }
+          if(formData.servicioId !== 4){
+            lineas.push(``);
+            lineas.push(`📦 *Pedido*`);
+            if(formData.servicioId !== 1) lineas.push(`• Cantidad exacta: ${cotizacion.cantidad}`);
+            lineas.push(`• Precio unitario: $${currency(cotizacion.unitario)} COP`);
+            lineas.push(`• Subtotal: $${currency(cotizacion.subtotal)} COP`);
+            lineas.push(`• Descuento por cantidad: -$${currency(cotizacion.descuento)} COP`);
+            if(formData.servicioId !== 1 && formData.servicioId !== 3){
+              lineas.push(`• Instalación: ${formData.necesitaInstalacion==='si' ? `$${currency(cotizacion.instalacion)} COP` : "No aplica"}`);
+            }
+          }
+          lineas.push(``);
+          lineas.push(`💰 *Total:* $${currency(cotizacion.total)} COP`);
+          if(formData.servicioId !== 4){
+            lineas.push(``);
+            lineas.push(`🔎 *Detalles extra*`);
+            if(formData.tipoNegocio)    lineas.push(`• Tipo de negocio: ${formData.tipoNegocio}`);
+            if(formData.quePromocionar) lineas.push(`• Promoción: ${formData.quePromocionar}`);
+            if(formData.necesitaInstalacion==='si' && formData.ubicacion) lineas.push(`• Ubicación instalación: ${formData.ubicacion}`);
+          }
+          lineas.push(``);
+          lineas.push(`¿Listo para empezar? 🚀`);
+
+          const whatsappURL = `https://wa.me/573002218219?text=${encodeURIComponent(lineas.join('\n'))}`;
+          isSubmitting = false;
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg> Confirmar por WhatsApp`;
+          window.open(whatsappURL, '_blank');
+        });
+      }
+
+      // Delegación
+      card.querySelectorAll("button[data-field]").forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const field = btn.getAttribute('data-field');
+          const raw = btn.getAttribute('data-value');
+          const value = field === 'servicioId' ? parseInt(raw,10) : raw;
+          formData[field] = value;
+
+          if(field === 'servicioId'){
+            if(value === 1){ // diseño QR
+              formData.cantidadUnitaria = 1;
+              formData.necesitaInstalacion = '';
+              formData.ubicacion = '';
+            }
+            if(value === 3){ // servicio completo
+              formData.necesitaInstalacion = '';
+              formData.ubicacion = '';
+            }
+            if(value === 4){ // actualización/rediseño
+              formData.tipoNegocio = '';
+              formData.quePromocionar = '';
+              formData.formatoAfiche = '';
+              formData.cantidadUnitaria = 1;
+              formData.necesitaInstalacion = '';
+              formData.ubicacion = '';
+            }
+          }
+
+          render();
+          btnNext.disabled = !isStepValid();
+        });
+      });
+    }
+
+    // Navegación
+    $("#btnBack").addEventListener('click', ()=>{
+      if(stepIdx > 0){ stepIdx--; render(); }
+    });
+
+    $("#btnNext").addEventListener('click', ()=>{
+      const flow = getFlow();
+      if(stepIdx < flow.length-1){
+        if(flow[stepIdx+1] === "resumen") calcularCotizacion();
+        stepIdx++;
+        render();
+      }
+    });
+
+    // Init
+    render();
+  </script>
+</body>
+</html>
