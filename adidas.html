@@ -4,15 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ruleta de Descuentos Adidas | Promo Móvil 360</title>
-
     <link rel="icon" type="image/png" href="imagenes/logo.jpg">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
     <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
 
@@ -22,11 +20,12 @@
                 <img src="imagenes/logo.jpg" alt="Promo Móvil 360 Logo">
                 <h1 class="nombrelogo">Promo Móvil 360</h1>
             </a>
-
             <div class="nav-links-container">
                 <ul class="nav-menu">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="nosotros.html">Sobre Nosotros</a></li>
                     <li class="dropdown-container">
-                        <a href="index.html#">Categorías <i class="fa-solid fa-chevron-down"></i></a>
+                        <a href="#">Categorías <i class="fa-solid fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="index.html" class="category-filter" data-category="all">Todas</a></li>
                             <li><a href="index.html" class="category-filter" data-category="comida">Comida</a></li>
@@ -37,13 +36,11 @@
                         </ul>
                     </li>
                 </ul>
-
                 <div class="nav-actions">
                     <a href="login.html" class="action-link">Iniciar Sesión</a>
                     <a href="cotizacion.html" class="action-btn">Cotiza tu Promo & Afiche</a>
                 </div>
             </div>
-
             <button id="mobile-menu-toggle" class="mobile-menu-button">
                 <i class="fa-solid fa-bars"></i>
             </button>
@@ -52,19 +49,15 @@
 
     <main class="container">
         <div class="promo-detail-container">
-            <!-- Columna izquierda: imagen + QR -->
             <div class="promo-detail-image-column">
-                <!-- Cambia esta ruta por la imagen de tu afiche de la ruleta -->
-                <img src="imagenes/adidas.png" alt="Ruleta de Descuentos Adidas - Promo Móvil 360" class="promo-main-image">
+                <img src="imagenes/adidas.png" alt="Ruleta de Descuentos Adidas" class="promo-main-image">
                 <div class="qr-code-section">
                     <h2>¡Gira y gana!</h2>
-                    <p>Escanea el código QR o ingresa desde la pagina, gira la ruleta y acercate a la tienda para reclamar tu premio.</p>
-                    <!-- Cambia esta ruta por la imagen de tu QR -->
-                    <img src="imagenes/QRadidas.png" alt="Código QR de la Ruleta Adidas" class="promo-qr-code">
+                    <p>Escanea el código QR o ingresa desde la página, gira la ruleta y acércate a la tienda para reclamar tu premio.</p>
+                    <img src="imagenes/QRadidas.png" alt="Código QR Ruleta Adidas" class="promo-qr-code">
                 </div>
             </div>
 
-            <!-- Columna derecha: contenido -->
             <div class="promo-detail-content-column">
                 <nav class="breadcrumbs">
                     <a href="index.html">Inicio</a> > 
@@ -82,11 +75,7 @@
                     <p>
                         ¿Listo para jugar y ganar? Con la <strong>Ruleta de Descuentos Adidas</strong> puedes obtener 
                         beneficios especiales en tus compras: desde descuentos en productos seleccionados hasta 
-                        premios sorpresa. Solo necesitas escanear el QR o ingresar desde la pagina, girar la ruleta y presentar tu cedula en la caja preguntando sobre la promoción.
-                    </p>
-                    <p>
-                        El código promocional principal de esta campaña es <strong>PROMO RULETA</strong>, que verás en el 
-                        cupón al interactuar con la página. ¡Con un giro te puedes acercar al par de tenis que quieres!
+                        premios sorpresa. Solo necesitas escanear el QR o ingresar desde la página, girar la ruleta y presentar tu cédula en la caja preguntando sobre la promoción.
                     </p>
                 </div>
 
@@ -95,9 +84,9 @@
                     <ol class="steps-list">
                         <li>Escanea el <strong>código QR</strong> del afiche o de esta página con tu celular o computador.</li>
                         <li>Accede a la ruleta digital y <strong>gira</strong> para descubrir tu beneficio.</li>
-                        <li>Guarda un pantallazo o mantén visible el cupón con el texto <strong>PROMO RULETA</strong> y el descuento obtenido.</li>
-                        <li>Acércate al punto de venta Adidas participante y muestra la pantalla al personal de caja o pregunta sobre la Promoción.</li>
-                        <li>¡Listo! Se aplicará tu beneficio según las <strong>condiciones de la campaña</strong>.</li>
+                        <li>Completa el formulario con tus datos y <strong>guarda tu premio</strong>.</li>
+                        <li>Acércate al punto de venta Adidas y muestra la confirmación junto con tu cédula.</li>
+                        <li>¡Listo! Se aplicará tu beneficio según las condiciones de la campaña.</li>
                     </ol>
                 </div>
 
@@ -105,54 +94,13 @@
                     <h2>Términos y Condiciones</h2>
                     <ul class="terms-list">
                         <li><i class="fas fa-check-circle"></i> Promoción válida únicamente en tiendas Adidas o puntos autorizados participantes.</li>
-                        <li><i class="fas fa-check-circle"></i> El código <strong>PROMO RULETA</strong> aplica según el resultado mostrado en la ruleta digital.</li>
-                        <li><i class="fas fa-check-circle"></i> Válido hasta el <strong>31 de diciembre de 2025</strong> o hasta agotar existencias, lo que ocurra primero.</li>
-                        <li><i class="fas fa-times-circle"></i> Beneficio no acumulable con otras promociones, descuentos o convenios.</li>
+                        <li><i class="fas fa-check-circle"></i> Válido hasta el <strong>31 de diciembre de 2025</strong> o hasta agotar existencias.</li>
+                        <li><i class="fas fa-times-circle"></i> Beneficio no acumulable con otras promociones.</li>
                         <li><i class="fas fa-times-circle"></i> Válido para una sola transacción por cliente.</li>
-                        <li><i class="fas fa-exclamation-triangle"></i> El personal puede solicitar documento de identidad para validar la redención.</li>
-                        <li><i class="fas fa-exclamation-triangle"></i> Aplican restricciones según referencias, tallas o colecciones específicas.</li>
+                        <li><i class="fas fa-exclamation-triangle"></i> El personal puede solicitar documento de identidad para validación.</li>
                     </ul>
                 </div>
 
-                <section class="info-card">
-                    <h2>Sobre el punto de venta</h2>
-                    <div class="facts">
-                        <p><strong>Ubicación:</strong> Adidas Cartagena</p>
-                        <p><strong>Horario:</strong> Lun–Dom 10:00 a.m. – 8:00 p.m.</p>
-                        <p><strong>Teléfono:</strong> <a href="tel:+573001112233">+57 300 1112233</a></p>
-                        <p><strong>WhatsApp:</strong> <a href="https://wa.me/573001112233?text=Hola%20quiero%20saber%20sobre%20la%20Ruleta%20Adidas" target="_blank" rel="noopener">Escríbenos</a></p>
-                        <p><strong>Redes:</strong> <a href="https://instagram.com" target="_blank" rel="noopener">@TiendaAdidas</a></p>
-                        <p><strong>Métodos de pago:</strong> Efectivo, tarjetas débito/crédito, billeteras digitales.</p>
-                        <p><strong>Servicios:</strong> Asesoría personalizada, cambios y garantías según política de la marca.</p>
-                    </div>
-            
-                    <div class="cta-row">
-                        <a class="btn" href="tel:+573001112233"><i class="fa-solid fa-phone"></i> Llamar</a>
-                        <a class="btn" href="https://wa.me/573001112233?text=Hola%20quiero%20consultar%20la%20Ruleta%20Adidas" target="_blank" rel="noopener">
-                            <i class="fa-brands fa-whatsapp"></i> WhatsApp
-                        </a>
-                        <a class="btn btn-outline" target="_blank" rel="noopener" href="https://maps.google.com">
-                            <i class="fa-solid fa-location-dot"></i> Cómo llegar
-                        </a>
-                    </div>
-            
-                    <hr class="card-divider">
-            
-                    <h2>Galería y ambiente</h2>
-                    <p>Conoce un poco más del ambiente de la tienda y algunos de los productos que puedes encontrar.</p>
-                    <div class="gallery">
-                        <a href="imagenes/adidas/tienda1.png" target="_blank"><img src="imagenes/adidas/tienda1.png" alt="Interior de tienda Adidas"></a>
-                        <a href="imagenes/adidas/tenis1.png" target="_blank"><img src="imagenes/adidas/tenis1.png" alt="Tenis Adidas en exhibición"></a>
-                        <a href="imagenes/adidas/tenis2.png" target="_blank"><img src="imagenes/adidas/tenis2.png" alt="Zona de calzado deportivo"></a>
-                        <a href="imagenes/adidas/ruleta-detalle.png" target="_blank"><img src="imagenes/adidas/ruleta-detalle.png" alt="Detalle de la ruleta de descuentos"></a>
-                    </div>
-                    
-                    <div class="map-container">
-                        <!-- Reemplaza este iframe por el mapa de la ubicación real -->
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.582251319808!2d-75.51817942583804!3d10.41829286523912!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef625e365027a69%3A0x3b7936d531a20163!2sCartagena!5e0!3m2!1ses-419!2sco!4v1726536923055!5m2!1ses-419!2sco" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </section>
-                
                 <a href="index.html" class="back-link-btn"><i class="fas fa-arrow-left"></i> Volver a todas las promos</a>
             </div>
         </div>
@@ -171,57 +119,95 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <!-- MODAL RULETA MEJORADA -->
+    <div id="wheelModalV2" class="wheel-modal-v2">
+        <div class="wheel-dialog-v2">
+            <div class="wheel-header-v2">
+                <button class="wheel-close-v2" onclick="closeWheel()">×</button>
+                <div style="text-align: center; position: relative; z-index: 1;">
+                    <div class="wheel-badge">
+                        <i class="fas fa-gift"></i>
+                        <span style="color: white; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px;">ADIDAS EXCLUSIVE</span>
+                    </div>
+                    <h2 class="wheel-title-v2">Ruleta de Premios</h2>
+                    <p class="wheel-subtitle">Gira y gana descuentos increíbles</p>
+                </div>
+            </div>
 
-    <!-- MODAL RECOMPENSA (mismo markup que en otras promos) -->
-    <div id="reward-modal" class="reward-modal" aria-hidden="true">
-      <div class="reward-dialog" role="dialog" aria-modal="true">
-        <button class="reward-close" aria-label="Cerrar">&times;</button>
-        <div class="confetti-layer" aria-hidden="true"></div>
-        <h2 class="reward-title">🎉 ¡Premio desbloqueado!</h2>
-        <p class="reward-sub">Cupón aplicado: <strong id="reward-code">PROMO RULETA</strong></p>
+            <div class="wheel-body-v2">
+                <div id="wheelView">
+                    <div class="wheel-container-v2">
+                        <div class="wheel-pointer-v2"></div>
+                        <div id="wheelCircle" class="wheel-circle-v2"></div>
+                    </div>
 
-        <div class="progress-wrap">
-          <div class="progress-bar"><span class="progress-fill" style="width:0%"></span></div>
-          <p class="progress-tip">Completando… <strong class="progress-percent">0%</strong></p>
+                    <div id="messageBox" style="display: none;"></div>
+
+                    <button id="spinBtn" class="btn-spin" onclick="spinWheel()">
+                        <i class="fas fa-bullseye"></i> Girar Ruleta
+                    </button>
+
+                    <p style="text-align: center; font-size: 0.75rem; color: #6b7280; margin-top: 0.75rem;">
+                        Solo puedes participar una vez con tu cédula
+                    </p>
+                </div>
+
+                <div id="formView" style="display: none;">
+                    <div class="prize-display">
+                        <div class="prize-icon-big" id="prizeIconBig"></div>
+                        <h3 style="font-size: 1.5rem; font-weight: 900; color: #1f2937; margin: 0 0 1rem 0;">
+                            ¡Felicitaciones!
+                        </h3>
+                        <div class="prize-name" id="prizeName"></div>
+                    </div>
+
+                    <div id="formMessageBox" style="display: none;"></div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-user"></i>
+                            Nombre completo *
+                        </label>
+                        <input type="text" id="inputNombre" class="form-input" placeholder="Juan Pérez" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            Email *
+                        </label>
+                        <input type="email" id="inputEmail" class="form-input" placeholder="ejemplo@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-phone"></i>
+                            Teléfono *
+                        </label>
+                        <input type="tel" id="inputTelefono" class="form-input" placeholder="300 123 4567" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-id-card"></i>
+                            Cédula *
+                        </label>
+                        <input type="text" id="inputCedula" class="form-input" placeholder="1234567890" required>
+                    </div>
+
+                    <button id="submitBtn" class="btn-submit" onclick="submitForm()">
+                        <i class="fas fa-gift"></i> Reclamar Premio
+                    </button>
+
+                    <div class="info-box">
+                        📸 Toma captura de esta pantalla y preséntala con tu cédula en caja
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <a class="btn btn-glow" id="reward-cta" href="#" rel="noopener">
-            <span class="btn-text">Canjear ahora</span>
-        </a>
-      </div>
     </div>
 
-    <!-- Registro de escaneos en Supabase (ajusta slug si quieres otro nombre) -->
-    <script>
-    (async () => {
-      const SUPABASE_URL = "https://xjzkernuaqyfsfeowrsl.supabase.co";
-      const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqemtlcm51YXF5ZnNmZW93cnNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4NjE5OTIsImV4cCI6MjA3NzQzNzk5Mn0.MSgTsMXHQ847X0NKl8Ly05kFczqwn9XC01dzsZ_cY-8";
-
-      const slug = "ADIDAS-RULETA";  // clave para identificar esta promo
-      const ua = navigator.userAgent;
-
-      try {
-        const ipResp = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipResp.json();
-        const ip_hash = btoa(ipData.ip);
-
-        // Inserta en la tabla scans
-        await fetch(`${SUPABASE_URL}/rest/v1/scans`, {
-            method: "POST",
-            headers: {
-            apikey: SUPABASE_KEY,
-            Authorization: `Bearer ${SUPABASE_KEY}`,
-            "Content-Type": "application/json",
-            Prefer: "return=minimal"
-            },
-            body: JSON.stringify({ promo_slug: slug, ua, ip_hash })
-        });
-      } catch (err) {
-        console.error("Error registrando el scan de Adidas Ruleta:", err);
-      }
-    })();
-    </script>
+    <script src="script.js"></script>
 
 </body>
 </html>

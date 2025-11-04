@@ -2095,6 +2095,485 @@ a.promo-link:hover{ color:#fff; }
   }
 }
 
+        /* Estilos de la ruleta mejorada */
+        .wheel-modal-v2 {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            padding: 1rem;
+            animation: fadeIn 0.3s ease;
+            overflow: hidden;        /* ← importante, sin scroll aquí */
+        }
+
+        .wheel-modal-v2.show {
+            display: flex;
+        }
+
+        /* El scroll único va en TODO el modal (cabecera + cuerpo) */
+        .wheel-dialog-v2 {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 95vh;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            overflow-y: auto;        /* ← aquí el único scroll */
+            animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin: auto;
+        }
+
+        .wheel-header-v2 {
+            background: linear-gradient(135deg, #000000, #1a1a1a, #000000);
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wheel-header-v2::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.03) 10px,
+                rgba(255, 255, 255, 0.03) 20px
+            );
+        }
+
+        .wheel-close-v2 {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .wheel-close-v2:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .wheel-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 1rem;
+        }
+
+        .wheel-badge i {
+            color: #fbbf24;
+            animation: pulse 2s infinite;
+        }
+
+        .wheel-title-v2 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: white;
+            margin: 0 0 0.5rem 0;
+            letter-spacing: -0.5px;
+        }
+
+        .wheel-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        /* El cuerpo ya no controla el scroll, solo contiene contenido */
+        .wheel-body-v2 {
+            padding: 1.5rem;
+            /* quita estas líneas si las tienes:
+            max-height: calc(95vh - 180px);
+            overflow-y: auto;
+            */
+            max-height: none;
+            overflow: visible;
+        }
+
+/* Ruleta */
+        .wheel-container-v2 {
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 1.25rem;
+            position: relative;
+        }
+
+        .wheel-pointer-v2 {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 18px solid transparent;
+            border-right: 18px solid transparent;
+            border-top: 28px solid #dc2626;
+            z-index: 20;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: bounce 1s infinite;
+        }
+
+        .wheel-circle-v2 {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid #000;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 0 2px rgba(255, 255, 255, 0.1);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+
+        .wheel-segment {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            clip-path: polygon(0 0, 100% 0, 100% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wheel-segment-content {
+            position: absolute;
+            left: 45%;
+            top: 25%;
+            text-align: center;
+            color: white;
+            transform: rotate(-45deg);
+            width: 70px;
+        }
+
+        .wheel-segment-icon {
+            font-size: 2rem;
+            margin-bottom: 0.35rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+            display: block;
+        }
+
+        .wheel-segment-text {
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.15;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+            display: block;
+        }
+
+
+
+        .wheel-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffffff, #f3f4f6);
+            border-radius: 50%;
+            border: 4px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .wheel-center i {
+            color: #fbbf24;
+            font-size: 1.8rem;
+            animation: spin-slow 3s linear infinite;
+        }
+
+        /* Botones */
+        .btn-spin {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3);
+        }
+
+        .btn-spin:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-spin:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Formulario */
+        .prize-display {
+            text-align: center;
+            margin-bottom: 1.25rem;
+            animation: fadeIn 0.5s;
+        }
+
+        .prize-icon-big {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            margin-bottom: 0.75rem;
+            box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3);
+            animation: bounce 1s infinite;
+        }
+
+        .prize-name {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            padding: 0.625rem 1.25rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            display: inline-block;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 0.875rem;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .form-label i {
+            color: #3b82f6;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0.875rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-submit:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-submit:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+
+        .message-box {
+            padding: 0.875rem 1rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s;
+        }
+
+        .message-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fecaca;
+        }
+
+        .message-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #a7f3d0;
+        }
+
+        .message-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 2px solid #fde68a;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border: 2px solid #93c5fd;
+            color: #1e40af;
+            padding: 0.625rem 0.875rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            margin-top: 0.875rem;
+            line-height: 1.3;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 640px) {
+            .wheel-container-v2 {
+                width: 220px;
+                height: 220px;
+            }
+
+            .wheel-title-v2 {
+                font-size: 1.5rem;
+            }
+
+            .wheel-dialog-v2 {
+                border-radius: 20px;
+            }
+
+            .wheel-body-v2 {
+                padding: 1.25rem;
+            }
+        }
+
+        /* Scrollbar personalizado */
+        .wheel-body-v2::-webkit-scrollbar,
+        .wheel-dialog-v2::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .wheel-body-v2::-webkit-scrollbar-track,
+        .wheel-dialog-v2::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .wheel-body-v2::-webkit-scrollbar-thumb,
+        .wheel-dialog-v2::-webkit-scrollbar-thumb {
+            background: #c8a750;
+            border-radius: 10px;
+        }
+
+        .wheel-body-v2::-webkit-scrollbar-thumb:hover,
+        .wheel-dialog-v2::-webkit-scrollbar-thumb:hover {
+            background: #b0892c;
+        }
+
+
+        /* Centrar iconos dentro de cada segmento de la ruleta */
+.wheel-circle-v2 {
+    position: relative;
+}
+
+
+
+
+
+
 
 
 
