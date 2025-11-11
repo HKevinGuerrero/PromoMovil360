@@ -1,9 +1,5 @@
 // netlify/functions/generate-image.js
-// Versión CommonJS (la que Netlify soporta sin líos)
-
-exports.handler = async (event, context) => {
-  console.log("generate-image llamado. Método:", event.httpMethod);
-
+exports.handler = async (event) => {
   if (event.httpMethod !== "POST") {
     return {
       statusCode: 405,
@@ -11,28 +7,17 @@ exports.handler = async (event, context) => {
     };
   }
 
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: "OPENAI_API_KEY no está configurada" }),
+    };
+  }
+
   try {
-    const body = JSON.parse(event.body || "{}");
+    const body = JSON.parse(event.body);
     const prompt = body.prompt;
-
-    if (!prompt) {
-      console.log("Falta prompt");
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "Falta el prompt" }),
-      };
-    }
-
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      console.error("OPENAI_API_KEY no está definida");
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "OPENAI_API_KEY no está configurada en Netlify" }),
-      };
-    }
-
-    console.log("Llamando a OpenAI /v1/images/generations");
 
     const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
@@ -50,48 +35,26 @@ exports.handler = async (event, context) => {
       }),
     });
 
-    const text = await response.text();
-    console.log("Respuesta OpenAI status:", response.status);
+    const data = await response.json();
 
     if (!response.ok) {
-      console.error("Error de OpenAI:", text);
+      console.error("Error OpenAI:", data);
       return {
         statusCode: response.status,
-        body: text, // lo reenvío tal cual para verlo desde el front
-      };
-    }
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("No se pudo parsear JSON de OpenAI:", e, text);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Respuesta inválida de OpenAI" }),
+        body: JSON.stringify(data),
       };
     }
 
     const imageUrl = data?.data?.[0]?.url;
-    if (!imageUrl) {
-      console.error("OpenAI no devolvió imageUrl. Data:", data);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "OpenAI no devolvió una imagen" }),
-      };
-    }
-
-    console.log("Imagen generada OK");
     return {
       statusCode: 200,
       body: JSON.stringify({ imageUrl }),
     };
-
   } catch (err) {
-    console.error("Error interno en generate-image:", err);
+    console.error("Error interno:", err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: String(err) }),
+      body: JSON.stringify({ error: err.message }),
     };
   }
 };
